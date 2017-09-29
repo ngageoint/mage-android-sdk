@@ -19,7 +19,7 @@ public class ObservationForm {
 	@DatabaseField(columnName = COLUMN_NAME_FORM_ID)
 	private Long formId;
 
-	@DatabaseField(foreign = true, uniqueCombo = true)
+	@DatabaseField(foreign = true)
 	private Observation observation;
 
 	@ForeignCollectionField(eager = true)
