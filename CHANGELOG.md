@@ -5,6 +5,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ## 5.3.1 (TBD)
 
 ##### Features
+* Observation geometry support for lines and polygons
 
 ##### Bug Fixes
 
@@ -21,17 +22,17 @@ Adheres to [Semantic Versioning](http://semver.org/).
 * DateFormatFactory changed to ISO8601DateFormatFactory
 
 ##### Bug Fixes
-* Only send token expired notifcation once to listeners
+* Only send token expired notification once to listeners
 * Fix a bug in the user deserializer when deserializing a single user
 
 ## [5.2.0](https://github.com/ngageoint/mage-android-sdk/releases/tag/5.2.0) (11-04-2016)
 
 ##### Features
-* Added favorite and imporant to the observation model and services
+* Added favorite and important to the observation model and services
 * Optimize static layer delete by batch deleting.
 
 ##### Bug Fixes
-* Delete icon file if static fetaure icon fails to download
+* Delete icon file if static feature icon fails to download
 
 ## [5.1.1](https://github.com/ngageoint/mage-android-sdk/releases/tag/5.1.1) (11-10-2016)
 
@@ -43,6 +44,6 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ## [5.1.0](https://github.com/ngageoint/mage-android-sdk/releases/tag/5.1.0) (08-11-2016)
 
 ##### Features
-* Multi select support. 
+* Multi select support.
 
 ##### Bug Fixes
