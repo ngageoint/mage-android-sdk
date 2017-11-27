@@ -48,7 +48,7 @@ public class EventResource {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(EventsDeserializer.getGsonBuilder(context)))
-                .client(HttpClientManager.getInstance(context).httpClient())
+                .client(HttpClientManager.getInstance().httpClient())
                 .build();
 
         EventService service = retrofit.create(EventService.class);
