@@ -46,7 +46,7 @@ public class RoleResource {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(RolesDeserializer.getGsonBuilder()))
-                .client(HttpClientManager.getInstance(context).httpClient())
+                .client(HttpClientManager.getInstance().httpClient())
                 .build();
 
         RoleService service = retrofit.create(RoleService.class);
