@@ -64,12 +64,6 @@ public class HttpClientManager implements IEventDispatcher<ISessionEventListener
 
     private void initializeClient() {
         client = new OkHttpClient();
-        client.setHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
         client.setConnectTimeout(30, TimeUnit.SECONDS);
         client.setReadTimeout(30, TimeUnit.SECONDS);
         client.interceptors().add(new Interceptor() {
