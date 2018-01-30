@@ -365,7 +365,7 @@ public class UserResource {
     public void changePassword(String username, String password, String newPassword, String newPasswordConfirm, Callback<JsonObject> callback) {
         String baseUrl = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.serverURLKey), context.getString(R.string.serverURLDefaultValue));
 
-        OkHttpClient httpClient = HttpClientManager.getInstance(context).httpClient().clone();
+        OkHttpClient httpClient = HttpClientManager.getInstance().httpClient().clone();
         httpClient.interceptors().clear();
 
         Retrofit retrofit = new Retrofit.Builder()
