@@ -225,7 +225,7 @@ public class ObservationResource {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(ObservationConverterFactory.create(observation.getEvent()))
-                    .client(HttpClientManager.getInstance(context).httpClient())
+                    .client(HttpClientManager.getInstance().httpClient())
                     .build();
 
             ObservationService service = retrofit.create(ObservationService.class);
@@ -286,7 +286,7 @@ public class ObservationResource {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .client(HttpClientManager.getInstance(context).httpClient())
+                    .client(HttpClientManager.getInstance().httpClient())
                     .build();
 
             JsonObject state = new JsonObject();
