@@ -2,7 +2,7 @@ import org.ajoberstar.grgit.Grgit;
 
 plugins {
     id 'net.linguica.maven-settings' version '0.5'
-    id 'org.ajoberstar.grgit' version '1.6.0'
+    id 'org.ajoberstar.grgit' version '1.7.2'
 }
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
@@ -32,6 +32,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
     }
 }
 

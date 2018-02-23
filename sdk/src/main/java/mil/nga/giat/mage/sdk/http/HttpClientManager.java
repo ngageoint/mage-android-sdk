@@ -1,6 +1,6 @@
 package mil.nga.giat.mage.sdk.http;
 
-import android.content.Context;
+import android.app.Application;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -33,76 +33,74 @@ public class HttpClientManager implements IEventDispatcher<ISessionEventListener
 
     private static final String LOG_NAME = HttpClientManager.class.getName();
 
-    private static HttpClientManager httpClientManager;
-    private String userAgent;
+    private static HttpClientManager instance;
 
-    private Context context;
+    private Application context;
+    private String userAgent;
+    private OkHttpClient client;
     private Collection<ISessionEventListener> listeners = new CopyOnWriteArrayList<>();
 
-    public static HttpClientManager getInstance(final Context context) {
-        if (context == null) {
-            return null;
+    public static synchronized HttpClientManager initialize(Application context, String userAgent, OkHttpClient client) {
+        if (instance != null) {
+            throw new Error("attempt to initialize " + HttpClientManager.class.getName() + " singleton more than once");
         }
-
-        if (httpClientManager == null) {
-            String userAgent = System.getProperty("http.agent");
-            userAgent = (userAgent == null) ? "" : userAgent;
-
-            httpClientManager = new HttpClientManager(context, userAgent);
+        if (userAgent == null) {
+            userAgent = System.getProperty("http.agent");
+            userAgent = userAgent == null ? "" : userAgent;
         }
-
-        return httpClientManager;
+        instance = new HttpClientManager(context, userAgent);
+        return instance;
     }
 
-    private HttpClientManager(Context context, String userAgent) {
+    public static HttpClientManager getInstance() {
+        return instance;
+    }
+
+    private HttpClientManager(Application context, String userAgent) {
         this.context = context;
         this.userAgent = userAgent;
+        initializeClient();
     }
 
-    public OkHttpClient httpClient() {
-        OkHttpClient client = new OkHttpClient();
+    private void initializeClient() {
+        client = new OkHttpClient();
         client.setConnectTimeout(30, TimeUnit.SECONDS);
         client.setReadTimeout(30, TimeUnit.SECONDS);
-
         client.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request.Builder builder = chain.request().newBuilder();
-
-                // add token
                 String token = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.tokenKey), null);
                 if (token != null && !token.trim().isEmpty()) {
                     builder.addHeader("Authorization", "Bearer " + token);
                 }
-
-                // add Accept-Encoding:gzip
                 builder.addHeader("Accept-Encoding", "gzip")
                     .addHeader("User-Agent", userAgent);
 
                 Response response = chain.proceed(builder.build());
-
                 int statusCode = response.code();
                 if (statusCode == HTTP_UNAUTHORIZED) {
                     UserUtility userUtility = UserUtility.getInstance(context);
-
                     // If token has not expired yet, expire it and send notification to listeners
                     if (!userUtility.isTokenExpired()) {
                         UserUtility.getInstance(context).clearTokenInformation();
-
                         for (ISessionEventListener listener : listeners) {
                             listener.onTokenExpired();
                         }
                     }
 
                     Log.w(LOG_NAME, "TOKEN EXPIRED");
-                } else if (statusCode == HTTP_NOT_FOUND) {
+                }
+                else if (statusCode == HTTP_NOT_FOUND) {
                     Log.w(LOG_NAME, "404 Not Found.");
                 }
 
                 return response;
             }
         });
+    }
 
+    public OkHttpClient httpClient() {
         return client;
     }
 
