@@ -111,7 +111,7 @@ repositories {
 
 dependencies {
     ext {
-        support_library_version = '25.3.1'
+        support_library_version = '25.4.0'
     }
 
     compile "com.android.support:support-v13:$support_library_version"
