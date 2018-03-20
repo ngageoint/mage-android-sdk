@@ -1,4 +1,4 @@
-import org.ajoberstar.grgit.Grgit;
+import org.ajoberstar.grgit.Grgit
 
 plugins {
     id 'net.linguica.maven-settings' version '0.5'
@@ -16,12 +16,12 @@ ext {
 }
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 23
+        targetSdkVersion 26
         resValue 'string', 'source_refspec', project.sourceRefspec
         manifestPlaceholders source_refspec: project.sourceRefspec
         buildConfigField 'String', 'SOURCE_REFSPEC', $/"${project.sourceRefspec}"/$
@@ -55,7 +55,7 @@ def configurePom(pom) {
         configurations.compile.allDependencies.each { Dependency dep ->
             if (dep instanceof SelfResolvingDependency) {
                 // apparently the files() dependency results in a SelfResolvingDependency - skip it
-                return;
+                return
             }
 
             def dependencyNode = dependenciesNode.appendNode('dependency')
@@ -111,7 +111,7 @@ repositories {
 
 dependencies {
     ext {
-        support_library_version = '25.4.0'
+        support_library_version = '26.1.0'
     }
 
     compile "com.android.support:support-v13:$support_library_version"
