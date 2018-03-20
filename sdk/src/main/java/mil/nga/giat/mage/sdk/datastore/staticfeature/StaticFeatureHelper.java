@@ -12,16 +12,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import mil.nga.giat.mage.sdk.datastore.DaoHelper;
 import mil.nga.giat.mage.sdk.datastore.DaoStore;
 import mil.nga.giat.mage.sdk.datastore.layer.Layer;
-import mil.nga.giat.mage.sdk.event.IEventDispatcher;
-import mil.nga.giat.mage.sdk.event.IStaticFeatureEventListener;
 import mil.nga.giat.mage.sdk.exceptions.StaticFeatureException;
 
-public class StaticFeatureHelper extends DaoHelper<StaticFeature> implements IEventDispatcher<IStaticFeatureEventListener> {
+public class StaticFeatureHelper extends DaoHelper<StaticFeature> {
 
 	private static final String LOG_NAME = StaticFeatureHelper.class.getName();
 	
@@ -29,8 +26,6 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> implements IEv
 
 	private final Dao<StaticFeature, Long> staticFeatureDao;
 	private final Dao<StaticFeatureProperty, Long> staticFeaturePropertyDao;
-
-	private Collection<IStaticFeatureEventListener> listeners = new CopyOnWriteArrayList<IStaticFeatureEventListener>();
 
 	/**
 	 * Singleton.
@@ -107,8 +102,7 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> implements IEv
 	 * @return
 	 * @throws StaticFeatureException
 	 */
-	public Layer createAll(final Collection<StaticFeature> staticFeatures, final Layer pLayer) throws StaticFeatureException {
-
+	public Layer createAll(final Collection<StaticFeature> staticFeatures, final Layer pLayer) {
 		try {
 			TransactionManager.callInTransaction(DaoStore.getInstance(context).getConnectionSource(), new Callable<Void>() {
 				@Override
@@ -117,8 +111,6 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> implements IEv
 						try {
 							Collection<StaticFeatureProperty> properties = staticFeature.getProperties();
 							staticFeature = staticFeatureDao.createIfNotExists(staticFeature);
-
-							// create Static Feature properties.
 							if (properties != null) {
 								for (StaticFeatureProperty property : properties) {
 									property.setStaticFeature(staticFeature);
@@ -127,8 +119,6 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> implements IEv
 							}
 						} catch (SQLException sqle) {
 							Log.e(LOG_NAME, "There was a problem creating the static feature: " + staticFeature + ".", sqle);
-							continue;
-							// TODO Throw exception?
 						}
 					}
 
@@ -136,10 +126,6 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> implements IEv
 				}
 			});
 			pLayer.setLoaded(true);
-			// fire the event
-			for (IStaticFeatureEventListener listener : listeners) {
-				listener.onStaticFeaturesCreated(pLayer);
-			}
 		} catch (SQLException sqle) {
 			Log.e(LOG_NAME, "There was a problem creating static features.", sqle);
 		}
@@ -211,15 +197,5 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> implements IEv
 			Log.e(LOG_NAME, "Unable to delete Static Feature: " + ids, sqle);
 			throw new StaticFeatureException("Unable to delete Static Feature: " + ids, sqle);
 		}
-	}
-
-	@Override
-	public boolean addListener(IStaticFeatureEventListener listener) {
-		return listeners.add(listener);
-	}
-
-	@Override
-	public boolean removeListener(IStaticFeatureEventListener listener) {
-		return listeners.remove(listener);
 	}
 }
