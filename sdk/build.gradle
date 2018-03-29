@@ -16,12 +16,12 @@ ext {
 }
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 26
+        targetSdkVersion 27
         resValue 'string', 'source_refspec', project.sourceRefspec
         manifestPlaceholders source_refspec: project.sourceRefspec
         buildConfigField 'String', 'SOURCE_REFSPEC', $/"${project.sourceRefspec}"/$
@@ -109,21 +109,22 @@ repositories {
     }
 }
 
-dependencies {
-    ext {
-        support_library_version = '26.1.0'
-    }
+ext {
+    support_library_version = '27.1.0'
+}
 
-    compile "com.android.support:support-v13:$support_library_version"
-    compile "com.android.support:appcompat-v7:$support_library_version"
-    compile "com.android.support:preference-v7:$support_library_version"
-    compile 'mil.nga.geopackage:geopackage-android:1.4.1'
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.guava:guava:18.0'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.2'
-    compile files('libs/sanselanandroid.jar')
+dependencies {
+
+    api 'com.google.code.gson:gson:2.7'
+    api 'mil.nga.geopackage:geopackage-android:1.4.1'
+    api 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    api 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    api 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
+    api 'com.google.guava:guava:18.0'
+    api 'org.apache.commons:commons-lang3:3.3.2'
+    implementation "com.android.support:support-v13:$support_library_version"
+    implementation "com.android.support:appcompat-v7:$support_library_version"
+    implementation "com.android.support:preference-v7:$support_library_version"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.4.2'
+    implementation files('libs/sanselanandroid.jar')
 }
