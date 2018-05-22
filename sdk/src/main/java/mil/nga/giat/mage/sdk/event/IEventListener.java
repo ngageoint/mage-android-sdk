@@ -8,7 +8,8 @@ import java.util.EventListener;
  * 
  * @author wiedemanns
  *
+ * @deprecated doesn't seem to be much reason for this interface to exist
  */
+@Deprecated
 public interface IEventListener extends EventListener {
-	void onError(Throwable error);
 }

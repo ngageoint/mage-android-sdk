@@ -85,9 +85,4 @@ public class AttachmentPushService implements IAttachmentEventListener {
     public void onAttachmentDeleted(Attachment attachment) {
 
     }
-
-    @Override
-    public void onError(Throwable throwable) {
-
-    }
 }

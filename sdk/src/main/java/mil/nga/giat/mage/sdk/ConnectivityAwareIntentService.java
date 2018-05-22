@@ -20,11 +20,6 @@ public abstract class ConnectivityAwareIntentService extends IntentService imple
 	private static final String LOG_NAME = ConnectivityAwareIntentService.class.getName();
 
 	@Override
-	public void onError(Throwable error) {
-				
-	}
-
-	@Override
 	public void onAllDisconnected() {
 		isConnected = Boolean.FALSE;
 	}
