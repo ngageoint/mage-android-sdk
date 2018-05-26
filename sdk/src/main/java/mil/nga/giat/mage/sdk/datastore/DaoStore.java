@@ -69,7 +69,6 @@ public class DaoStore extends OrmLiteSqliteOpenHelper {
 	private Dao<LocationProperty, Long> locationPropertyDao;
 	
 	// Layer and StaticFeature DAOS
-	private Dao<Layer, Long> layerDao;
 	private Dao<StaticFeature, Long> staticFeatureDao;
 	private Dao<StaticFeatureProperty, Long> staticFeaturePropertyDao;
 	
@@ -115,11 +114,10 @@ public class DaoStore extends OrmLiteSqliteOpenHelper {
 			getLayerDao();
 			getStaticFeatureDao();
 			getStaticFeaturePropertyDao();
-		} catch (SQLException sqle) {
-			// TODO: handle this...
-			sqle.printStackTrace();
 		}
-
+		catch (SQLException e) {
+			throw new Error("error initializing database", e);
+		}
 	}
 
 	public boolean isDatabaseEmpty() {
@@ -437,10 +435,7 @@ public class DaoStore extends OrmLiteSqliteOpenHelper {
 	 * @throws SQLException
 	 */
 	public Dao<Layer, Long> getLayerDao() throws SQLException {
-		if (layerDao == null) {
-			layerDao = getDao(Layer.class);
-		}
-		return layerDao;
+		return getDao(Layer.class);
 	}
 	
 	/**
