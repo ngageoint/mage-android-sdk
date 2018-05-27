@@ -15,7 +15,6 @@ import mil.nga.giat.mage.sdk.datastore.DaoHelper;
 import mil.nga.giat.mage.sdk.datastore.staticfeature.StaticFeatureHelper;
 import mil.nga.giat.mage.sdk.datastore.user.Event;
 import mil.nga.giat.mage.sdk.event.IEventDispatcher;
-import mil.nga.giat.mage.sdk.event.ILayerEventListener;
 import mil.nga.giat.mage.sdk.exceptions.LayerException;
 
 /**
@@ -26,14 +25,12 @@ import mil.nga.giat.mage.sdk.exceptions.LayerException;
  * @author wiedemanns
  * 
  */
-public class LayerHelper extends DaoHelper<Layer> implements IEventDispatcher<ILayerEventListener> {
+public class LayerHelper extends DaoHelper<Layer> {
 
     private static final String LOG_NAME = LayerHelper.class.getName();
 
     private final Dao<Layer, Long> layerDao;
 
-    private Collection<ILayerEventListener> listeners = new CopyOnWriteArrayList<ILayerEventListener>();
-    
     private Context context;
 
     /**
@@ -136,10 +133,6 @@ public class LayerHelper extends DaoHelper<Layer> implements IEventDispatcher<IL
             Log.e(LOG_NAME, "There was a problem creating the layer: " + pLayer + ".", sqle);
             throw new LayerException("There was a problem creating the layer: " + pLayer + ".", sqle);
         }
-		// fire the event
-		for (ILayerEventListener listener : listeners) {
-			listener.onLayerCreated(pLayer);
-		}
 
         return createdLayer;
     }
@@ -175,15 +168,5 @@ public class LayerHelper extends DaoHelper<Layer> implements IEventDispatcher<IL
 		for(Layer layer : readAll()) {
 			delete(layer.getId());
 		}
-    }
-
-    @Override
-    public boolean addListener(ILayerEventListener listener) {
-        return listeners.add(listener);
-    }
-
-    @Override
-    public boolean removeListener(ILayerEventListener listener) {
-        return listeners.remove(listener);
     }
 }
