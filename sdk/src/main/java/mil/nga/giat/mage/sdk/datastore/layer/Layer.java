@@ -1,5 +1,7 @@
 package mil.nga.giat.mage.sdk.datastore.layer;
 
+import android.support.annotation.NonNull;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -34,13 +36,6 @@ public class Layer implements Comparable<Layer> {
 
 	@DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
 	private Event event;
-
-	/**
-	 * Do NOT eager load the features!
-	 * 
-	 */
-	@ForeignCollectionField(eager = false)
-	private Collection<StaticFeature> staticFeatures = new ArrayList<StaticFeature>();
 
 	public Layer() {
 		// ORMLite needs a no-arg constructor
@@ -98,17 +93,13 @@ public class Layer implements Comparable<Layer> {
 		this.loaded = loaded;
 	}
 
-	public Collection<StaticFeature> getStaticFeatures() {
-		return staticFeatures;
-	}
-
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
 
 	@Override
-	public int compareTo(Layer another) {
+	public int compareTo(@NonNull Layer another) {
 		return new CompareToBuilder().append(this.id, another.id).append(this.remoteId, another.remoteId).toComparison();
 	}
 
