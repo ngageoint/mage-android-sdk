@@ -16,6 +16,7 @@ import java.util.concurrent.Callable;
 import mil.nga.giat.mage.sdk.datastore.DaoHelper;
 import mil.nga.giat.mage.sdk.datastore.DaoStore;
 import mil.nga.giat.mage.sdk.datastore.layer.Layer;
+import mil.nga.giat.mage.sdk.datastore.layer.LayerHelper;
 import mil.nga.giat.mage.sdk.exceptions.StaticFeatureException;
 
 public class StaticFeatureHelper extends DaoHelper<StaticFeature> {
@@ -102,11 +103,11 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> {
 	 * @return
 	 * @throws StaticFeatureException
 	 */
-	public Layer createAll(final Collection<StaticFeature> staticFeatures, final Layer pLayer) {
+	public Layer createAll(final Collection<StaticFeature> staticFeatures, final Layer layer) {
 		try {
-			TransactionManager.callInTransaction(DaoStore.getInstance(context).getConnectionSource(), new Callable<Void>() {
+			return TransactionManager.callInTransaction(DaoStore.getInstance(context).getConnectionSource(), new Callable<Layer>() {
 				@Override
-				public Void call() throws Exception {
+				public Layer call() throws Exception {
 					for (StaticFeature staticFeature : staticFeatures) {
 						try {
 							Collection<StaticFeatureProperty> properties = staticFeature.getProperties();
@@ -121,16 +122,16 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> {
 							Log.e(LOG_NAME, "There was a problem creating the static feature: " + staticFeature + ".", sqle);
 						}
 					}
-
-					return null;
+					layer.setLoaded(true);
+					return LayerHelper.getInstance(context).update(layer);
 				}
 			});
-			pLayer.setLoaded(true);
-		} catch (SQLException sqle) {
-			Log.e(LOG_NAME, "There was a problem creating static features.", sqle);
+		}
+		catch (SQLException e) {
+			Log.e(LOG_NAME, "error saving static features", e);
 		}
 
-		return pLayer;
+		return layer;
 	}
 
 	@Override
