@@ -92,22 +92,20 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> {
 	}
 
 	@Override
-	public StaticFeature update(StaticFeature pStaticFeature) throws Exception {
-		throw new UnsupportedOperationException();
+	public StaticFeature update(StaticFeature feature) throws Exception {
+		int rows = staticFeatureDao.update(feature);
+		if (rows != 1) {
+			throw new StaticFeatureException("static feature update should affect 1 row, but affected " + rows + " for feature " + feature.getId());
+		}
+		return feature;
 	}
 
-	/**
-	 * Set of layers that features were added to, or already belonged to.
-	 * 
-	 * @param staticFeatures
-	 * @return
-	 * @throws StaticFeatureException
-	 */
-	public Layer createAll(final Collection<StaticFeature> staticFeatures, final Layer layer) {
+	public Collection<StaticFeature> createAll(final Collection<StaticFeature> staticFeatures, final Layer layer) throws StaticFeatureException {
 		try {
-			return TransactionManager.callInTransaction(DaoStore.getInstance(context).getConnectionSource(), new Callable<Layer>() {
+			return TransactionManager.callInTransaction(DaoStore.getInstance(context).getConnectionSource(), new Callable<Collection<StaticFeature>>() {
 				@Override
-				public Layer call() throws Exception {
+				public Collection<StaticFeature> call() throws Exception {
+					Collection<StaticFeature> saved = new ArrayList<>(staticFeatures.size());
 					for (StaticFeature staticFeature : staticFeatures) {
 						try {
 							Collection<StaticFeatureProperty> properties = staticFeature.getProperties();
@@ -118,20 +116,20 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> {
 									staticFeaturePropertyDao.create(property);
 								}
 							}
+							saved.add(staticFeature);
 						} catch (SQLException sqle) {
 							Log.e(LOG_NAME, "There was a problem creating the static feature: " + staticFeature + ".", sqle);
 						}
 					}
 					layer.setLoaded(true);
-					return LayerHelper.getInstance(context).update(layer);
+					LayerHelper.getInstance(context).update(layer);
+					return saved;
 				}
 			});
 		}
 		catch (SQLException e) {
-			Log.e(LOG_NAME, "error saving static features", e);
+			throw new StaticFeatureException("error saving static features for layer " + layer.getRemoteId(), e);
 		}
-
-		return layer;
 	}
 
 	@Override
