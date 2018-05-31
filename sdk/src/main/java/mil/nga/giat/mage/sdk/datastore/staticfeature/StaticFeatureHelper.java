@@ -118,7 +118,7 @@ public class StaticFeatureHelper extends DaoHelper<StaticFeature> {
 							}
 							saved.add(staticFeature);
 						} catch (SQLException sqle) {
-							Log.e(LOG_NAME, "There was a problem creating the static feature: " + staticFeature + ".", sqle);
+							Log.e(LOG_NAME, "error creating static feature: " + staticFeature, sqle);
 						}
 					}
 					layer.setLoaded(true);
