@@ -6,8 +6,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ## 6.1.1 (TBD)
 
 ##### Features
+* Beta GeoPackage download feature.
 
 ##### Bug Fixes
+* Fixed a bug where user create error stream was parsed twice, resulting in an invalid error be reported to client.
 
 ## [6.1.0](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.1.0) (04-16-2018)
 
