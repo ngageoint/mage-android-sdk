@@ -6,8 +6,10 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ## 6.1.2 (TBD)
 
 ##### Features
+* Login api returns response object so that application client can check server response in error case.
 
 ##### Bug Fixes
+* Logout api now explicitly passes token in header.  Http interceptor was unreliable as the token may have been removed before Authorization header was added.
 
 ## [6.1.1](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.1.1) (06-19-2018)
 
