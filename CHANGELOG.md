@@ -7,6 +7,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Features
 * Login api returns response object so that application client can check server response in error case.
+* Login api separates authentication from authorization.
 
 ##### Bug Fixes
 * Logout api now explicitly passes token in header.  Http interceptor was unreliable as the token may have been removed before Authorization header was added.
