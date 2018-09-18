@@ -3,7 +3,13 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.1.2 (TBD)
+## 6.2.1 (TBD)
+
+##### Features
+
+##### Bug Fixes
+
+## [6.2.0](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.0) (09-18-2018)
 
 ##### Features
 * Login api returns response object so that application client can check server response in error case.
