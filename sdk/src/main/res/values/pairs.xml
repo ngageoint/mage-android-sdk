@@ -66,9 +66,6 @@
     <string name="reportLocationKey">reportLocation</string>
     <bool name="reportLocationDefaultValue">true</bool>
 
-    <string name="userReportingFrequencyKey">userReportingFrequency</string>
-    <integer name="userReportingFrequencyDefaultValue">300000</integer>
-
     <string name="gpsSensitivityKey">gpsSensitivity</string>
     <integer name="gpsSensitivityDefaultValue">10</integer>
 
