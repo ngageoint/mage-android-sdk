@@ -110,6 +110,7 @@ dependencies {
     api "com.android.support:support-v13:$support_library_version"
     api "com.android.support:appcompat-v7:$support_library_version"
     api "com.android.support:preference-v7:$support_library_version"
+    api 'com.j256.ormlite:ormlite-android:5.1'
     api 'mil.nga.geopackage:geopackage-android:1.4.1'
     api 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     api 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
