@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.squareup.okhttp.ResponseBody;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,9 +12,10 @@ import java.util.Iterator;
 
 import mil.nga.giat.mage.sdk.R;
 import mil.nga.giat.mage.sdk.http.resource.ApiResource;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by wnewman on 1/4/18.
@@ -42,9 +41,9 @@ public class ServerApi {
 
         apiResource.getApi(url, new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Response<ResponseBody> response, Retrofit retrofit) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    if (response.isSuccess()) {
+                    if (response.isSuccessful()) {
                         JSONObject apiJson = new JSONObject(response.body().string());
                         removeValues(SERVER_API_PREFERENCE_PREFIX);
                         populateValues(SERVER_API_PREFERENCE_PREFIX, apiJson);
@@ -66,7 +65,7 @@ public class ServerApi {
             }
 
             @Override
-            public void onFailure(final Throwable t) {
+            public void onFailure(Call<ResponseBody> call, final Throwable t) {
                 Log.e(LOG_NAME, "Problem reading server api settings: " + url, t);
                 apiListener.onApi(false, new Exception(t));
             }
