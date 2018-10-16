@@ -27,6 +27,7 @@ public class ServerApi {
     }
 
     private static final String LOG_NAME = ServerApi.class.getName();
+    private static final String SERVER_API_PREFERENCE_PREFIX_REGEX = "^g[A-Z]\\w*";
     private static final String SERVER_API_PREFERENCE_PREFIX = "g";
     private static final String SERVER_API_AUTHENTICATION_STRATEGIES_KEY = "authenticationStrategies";
 
@@ -165,7 +166,7 @@ public class ServerApi {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for (String key : sharedPreferences.getAll().keySet()) {
-            if (key.startsWith(sharedPreferenceName)) {
+            if (key.matches(SERVER_API_PREFERENCE_PREFIX_REGEX)) {
                 editor.remove(key);
             }
         }
