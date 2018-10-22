@@ -1,11 +1,18 @@
-# Change Log
+ Change Log
 All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.2.1 (TBD)
+## 6.2.2 (TBD)
 
 ##### Features
+
+##### Bug Fixes
+
+## [6.2.1](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.1) (10-22-2018)
+
+##### Features
+* Remove some logging
 
 ##### Bug Fixes
 
