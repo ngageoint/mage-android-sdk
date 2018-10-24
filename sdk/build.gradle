@@ -16,12 +16,12 @@ ext {
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 23
+        minSdkVersion 21
+        targetSdkVersion 28
         resValue 'string', 'source_refspec', project.sourceRefspec
         manifestPlaceholders source_refspec: project.sourceRefspec
         buildConfigField 'String', 'SOURCE_REFSPEC', $/"${project.sourceRefspec}"/$
@@ -45,7 +45,7 @@ def configurePom(pom) {
     pom.withXml {
         // for dependencies and exclusions
         def dependenciesNode = asNode().appendNode('dependencies')
-        configurations.compile.allDependencies.each { Dependency dep ->
+        configurations.api.allDependencies.each { Dependency dep ->
             if (dep instanceof SelfResolvingDependency) {
                 // apparently the files() dependency results in a SelfResolvingDependency - skip it
                 return;
@@ -104,19 +104,22 @@ repositories {
 
 dependencies {
     ext {
-        support_library_version = '25.3.1'
+        support_library_version = '28.0.0'
     }
 
-    compile "com.android.support:support-v13:$support_library_version"
-    compile "com.android.support:appcompat-v7:$support_library_version"
-    compile "com.android.support:preference-v7:$support_library_version"
-    compile 'mil.nga.geopackage:geopackage-android:1.4.1'
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
-    compile 'com.squareup.retrofit:converter-jackson:2.0.0-beta2'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.guava:guava:18.0'
-    compile 'org.apache.commons:commons-lang3:3.3.2'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.2'
-    compile files('libs/sanselanandroid.jar')
+    api "com.android.support:support-v13:$support_library_version"
+    api "com.android.support:appcompat-v7:$support_library_version"
+    api "com.android.support:preference-v7:$support_library_version"
+    api 'com.j256.ormlite:ormlite-android:5.1'
+    api 'mil.nga.geopackage:geopackage-android:1.4.1'
+    api 'com.squareup.retrofit2:retrofit:2.4.0'
+    api 'com.squareup.retrofit2:converter-gson:2.4.0'
+    api 'com.squareup.retrofit2:converter-jackson:2.4.0'
+    api 'com.squareup.okhttp3:okhttp:3.11.0'
+    api 'com.squareup.okhttp3:okhttp-urlconnection:3.11.0'
+    api 'com.google.code.gson:gson:2.8.2'
+    api 'com.google.guava:guava:18.0'
+    api 'org.apache.commons:commons-lang3:3.3.2'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
+    api files('libs/sanselanandroid.jar')
 }
