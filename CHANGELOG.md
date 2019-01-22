@@ -3,9 +3,16 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.2.2 (TBD)
+## 6.2.3 (TBD)
 
 ##### Features
+
+##### Bug Fixes
+
+## [6.2.2](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.2) (01-22-2019)
+
+##### Features
+* Added 5 and 30 second user location pull frequencies.
 
 ##### Bug Fixes
 
