@@ -9,6 +9,13 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Bug Fixes
 
+## [6.2.3](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.3) (06-06-2019)
+
+##### Features
+
+##### Bug Fixes
+* Don't throw exception if we cannot pull recent events form the database based on id. Log the problem and return an empty list.
+
 ## [6.2.2](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.2) (01-22-2019)
 
 ##### Features
