@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.2.3 (TBD)
+## 6.2.4 (TBD)
 
 ##### Features
 
