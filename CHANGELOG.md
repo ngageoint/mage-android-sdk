@@ -8,6 +8,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ##### Features
 
 ##### Bug Fixes
+* Update OkHttp3 manager to handle gzip transparently.
 
 ## [6.2.3](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.3) (06-06-2019)
 
