@@ -28,13 +28,13 @@ import mil.nga.giat.mage.sdk.utils.ISO8601DateFormatFactory;
  * @author newmanw
  *
  */
-public class OAuthLoginTask extends AbstractAccountTask {
+public class IdpLoginTask extends AbstractAccountTask {
 
-	private static final String LOG_NAME = OAuthLoginTask.class.getName();
+	private static final String LOG_NAME = IdpLoginTask.class.getName();
 	private DateFormat iso8601Format = ISO8601DateFormatFactory.ISO8601();
 	private UserDeserializer userDeserializer;
 
-	public OAuthLoginTask(AccountDelegate delegate, Context context) {
+	public IdpLoginTask(AccountDelegate delegate, Context context) {
 		super(delegate, context);
 
 		userDeserializer = new UserDeserializer(context);
