@@ -9,6 +9,8 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Bug Fixes
 * Update OkHttp3 manager to handle gzip transparently.
+* Determine audio file extension based on file provided by audio recorder, not by ContentResolver's content type as audio/mp4 is not a content type 
+  available in MimeTypeMap which was causing crashes on some samsung devices.
 
 ## [6.2.3](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.3) (06-06-2019)
 
