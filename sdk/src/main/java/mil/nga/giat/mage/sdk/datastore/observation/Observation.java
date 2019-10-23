@@ -378,6 +378,14 @@ public class Observation implements Comparable<Observation>, Temporal {
         return getField("variantField");
     }
 
+    public ObservationProperty getPrimaryFeedField() {
+        return getField("primaryFeedField");
+    }
+
+    public ObservationProperty getSecondaryFeedField() {
+        return getField("secondaryFeedField");
+    }
+
     public ObservationProperty getField(String name) {
         ObservationProperty field = null;
         Collection<ObservationForm> forms = getForms();
