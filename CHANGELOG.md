@@ -6,6 +6,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ## 6.2.5 (TBD)
 
 ##### Features
+* geopackage-android version 3.4.0
 
 ##### Bug Fixes
 * Media Utility handling of additional types of download document URIs

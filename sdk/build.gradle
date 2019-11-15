@@ -107,7 +107,7 @@ dependencies {
     api 'androidx.preference:preference:1.1.0'
     api 'androidx.exifinterface:exifinterface:1.0.0'
     api 'com.j256.ormlite:ormlite-android:5.1'
-    api 'mil.nga.geopackage:geopackage-android:3.3.0'
+    api 'mil.nga.geopackage:geopackage-android:3.4.0'
     api 'com.squareup.retrofit2:retrofit:2.5.0'
     api 'com.squareup.retrofit2:converter-gson:2.5.0'
     api 'com.squareup.retrofit2:converter-jackson:2.5.0'
