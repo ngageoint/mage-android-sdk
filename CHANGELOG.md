@@ -3,9 +3,16 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.2.5 (TBD)
+## 6.2.6 (TBD)
 
 ##### Features
+
+##### Bug Fixes
+
+## [6.2.5](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.5)
+
+##### Features
+* Update from support library to androidx
 * geopackage-android version 3.4.0
 
 ##### Bug Fixes
