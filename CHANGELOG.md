@@ -6,6 +6,8 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ## 6.2.6 (TBD)
 
 ##### Features
+* Add ability to fetch imagery layers 
+* Modified fetching of static features into 2 steps (fetch, then load)
 
 ##### Bug Fixes
 
