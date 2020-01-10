@@ -6,8 +6,6 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ## 6.2.6 (TBD)
 
 ##### Features
-* Add ability to fetch imagery layers 
-* Modified fetching of static features into 2 steps (fetch, then load)
 
 ##### Bug Fixes
 
@@ -16,6 +14,8 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ##### Features
 * Update from support library to androidx
 * geopackage-android version 3.4.0
+* Add ability to fetch imagery layers 
+* Modified fetching of static features into 2 steps (fetch, then load)
 
 ##### Bug Fixes
 * Media Utility handling of additional types of download document URIs
