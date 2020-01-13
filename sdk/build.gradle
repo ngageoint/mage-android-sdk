@@ -75,12 +75,18 @@ publishing {
             artifactId archivesBaseName
             pom.packaging 'aar'
             configurePom(pom)
-            artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-release.aar"
-            artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-debug.aar", {
-                classifier 'debug'
-            }
-            artifact sourceJar, {
-                classifier 'sources'
+            project.afterEvaluate {
+                artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-release.aar", {
+                    builtBy assembleRelease
+                }
+                artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-debug.aar", {
+                    classifier 'debug'
+                    builtBy assembleDebug
+                }
+                artifact sourceJar, {
+                    classifier 'sources'
+                    builtBy sourceJar
+                }
             }
         }
     }
