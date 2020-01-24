@@ -75,12 +75,18 @@ publishing {
             artifactId archivesBaseName
             pom.packaging 'aar'
             configurePom(pom)
-            artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-release.aar"
-            artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-debug.aar", {
-                classifier 'debug'
-            }
-            artifact sourceJar, {
-                classifier 'sources'
+            project.afterEvaluate {
+                artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-release.aar", {
+                    builtBy assembleRelease
+                }
+                artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-debug.aar", {
+                    classifier 'debug'
+                    builtBy assembleDebug
+                }
+                artifact sourceJar, {
+                    classifier 'sources'
+                    builtBy sourceJar
+                }
             }
         }
     }
@@ -107,7 +113,7 @@ dependencies {
     api 'androidx.preference:preference:1.1.0'
     api 'androidx.exifinterface:exifinterface:1.0.0'
     api 'com.j256.ormlite:ormlite-android:5.1'
-    api 'mil.nga.geopackage:geopackage-android:3.3.0'
+    api 'mil.nga.geopackage:geopackage-android:3.4.0'
     api 'com.squareup.retrofit2:retrofit:2.5.0'
     api 'com.squareup.retrofit2:converter-gson:2.5.0'
     api 'com.squareup.retrofit2:converter-jackson:2.5.0'

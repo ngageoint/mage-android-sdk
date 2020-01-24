@@ -3,11 +3,22 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.2.5 (TBD)
+## 6.2.6 (TBD)
 
 ##### Features
 
 ##### Bug Fixes
+
+## [6.2.5](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.5)
+
+##### Features
+* Update from support library to androidx
+* geopackage-android version 3.4.0
+* Add ability to fetch imagery layers 
+* Modified fetching of static features into 2 steps (fetch, then load)
+
+##### Bug Fixes
+* Media Utility handling of additional types of download document URIs
 
 ## [6.2.4](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.4) (08-15-2019)
 
@@ -15,7 +26,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 
 ##### Bug Fixes
 * Update OkHttp3 manager to handle gzip transparently.
-* Determine audio file extension based on file provided by audio recorder, not by ContentResolver's content type as audio/mp4 is not a content type 
+* Determine audio file extension based on file provided by audio recorder, not by ContentResolver's content type as audio/mp4 is not a content type
   available in MimeTypeMap which was causing crashes on some samsung devices.
 * Account for zip path traversal vulnerability.
 
