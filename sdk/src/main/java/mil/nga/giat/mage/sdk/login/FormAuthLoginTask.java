@@ -121,7 +121,7 @@ public class FormAuthLoginTask extends AbstractAccountTask {
 			}
 
 			UserResource userResource = new UserResource(mApplicationContext);
-			Response<JsonObject> response = userResource.signin(username, uuid, password);
+			Response<JsonObject> response = userResource.signin(strategy, username, uuid, password);
 
 			if (response.isSuccessful()) {
 				JsonObject authorizeResponse = userResource.authorize(strategy, uuid);
