@@ -2,8 +2,6 @@ package mil.nga.giat.mage.sdk.login;
 
 import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +17,7 @@ public class AccountStatus {
 		SUCCESSFUL_LOGIN,
 		DISCONNECTED_LOGIN,
 		FAILED_LOGIN,
-		SUCCESSFUL_REGISTRATION,
-		ALREADY_REGISTERED,
+		FAILED_AUTHORIZATION,
 		FAILED_SIGNUP,
 		SUCCESSFUL_SIGNUP,
 		INVALID_SERVER

@@ -5,8 +5,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +14,6 @@ import mil.nga.giat.mage.sdk.event.IEventDispatcher;
 import mil.nga.giat.mage.sdk.event.ISessionEventListener;
 import mil.nga.giat.mage.sdk.utils.UserUtility;
 import okhttp3.Interceptor;
-import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -39,7 +36,6 @@ public class HttpClientManager implements IEventDispatcher<ISessionEventListener
 
     private Application context;
     private String userAgent;
-    private CookieManager cookieManager;
     private OkHttpClient client;
 
     private Collection<ISessionEventListener> listeners = new CopyOnWriteArrayList<>();
@@ -52,10 +48,7 @@ public class HttpClientManager implements IEventDispatcher<ISessionEventListener
         String userAgent = System.getProperty("http.agent");
         userAgent = userAgent == null ? "" : userAgent;
 
-        CookieManager cookieManager = new CookieManager();
-        cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
-
-        instance = new HttpClientManager(context, userAgent, cookieManager);
+        instance = new HttpClientManager(context, userAgent);
 
         return instance;
     }
@@ -64,10 +57,9 @@ public class HttpClientManager implements IEventDispatcher<ISessionEventListener
         return instance;
     }
 
-    private HttpClientManager(Application context, String userAgent, CookieManager cookieManager) {
+    private HttpClientManager(Application context, String userAgent) {
         this.context = context;
         this.userAgent = userAgent;
-        this.cookieManager = cookieManager;
 
         initializeClient();
     }
@@ -76,8 +68,7 @@ public class HttpClientManager implements IEventDispatcher<ISessionEventListener
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .cookieJar(new JavaNetCookieJar(cookieManager));
+                .writeTimeout(30, TimeUnit.SECONDS);
 
         builder.addInterceptor(new Interceptor() {
             @Override

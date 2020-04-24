@@ -57,15 +57,10 @@ public class FormAuthLoginTask extends AbstractAccountTask {
 	}
 
 	private AccountStatus login(String... params) {
-		// get inputs
 		String username = params[0];
 		String password = params[1];
 		String serverURL = params[2];
-		Boolean needToRegisterDevice = Boolean.valueOf(params[3]);
-		String strategy = "local";
-		if(params.length >= 5) {
-			strategy = params[4];
-		}
+		String strategy = params.length > 3 ? params[3] : "local";
 
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mApplicationContext);
 
@@ -99,8 +94,8 @@ public class FormAuthLoginTask extends AbstractAccountTask {
 			return new AccountStatus(AccountStatus.Status.FAILED_LOGIN, errorIndices, errorMessages);
 		}
 
-		String uuid = new DeviceUuidFactory(mApplicationContext).getDeviceUuid().toString();
-		if (uuid == null) {
+		String uid = new DeviceUuidFactory(mApplicationContext).getDeviceUuid().toString();
+		if (uid == null) {
 			List<Integer> errorIndices = new ArrayList<>();
 			errorIndices.add(2);
 			List<String> errorMessages = new ArrayList<>();
@@ -109,34 +104,21 @@ public class FormAuthLoginTask extends AbstractAccountTask {
 		}
 
 		try {
-			// Does the device need to be registered?
-			if (needToRegisterDevice) {
-				AccountStatus.Status regStatus = registerDevice(uuid, strategy);
-
-				if (regStatus.equals(AccountStatus.Status.SUCCESSFUL_REGISTRATION)) {
-					return new AccountStatus(regStatus);
-				} else if (regStatus == AccountStatus.Status.FAILED_LOGIN) {
-					return new AccountStatus(regStatus);
-				}
-			}
-
 			UserResource userResource = new UserResource(mApplicationContext);
-			Response<JsonObject> response = userResource.signin(strategy, username, uuid, password);
+			Response<JsonObject> signin = userResource.signin(strategy, username, password);
 
-			if (response.isSuccessful()) {
-				JsonObject authorizeResponse = userResource.authorize(strategy, uuid);
-				if (authorizeResponse == null) {
-					DeviceResource deviceResource = new DeviceResource(mApplicationContext);
-					JsonObject deviceJson = deviceResource.createDevice(strategy, uuid);
-					if (deviceJson.get("registered").getAsBoolean()) {
-						return new AccountStatus(AccountStatus.Status.ALREADY_REGISTERED);
-					} else {
-						return new AccountStatus(AccountStatus.Status.SUCCESSFUL_REGISTRATION);
-					}
+			if (signin.isSuccessful()) {
+				JsonObject json = signin.body();
+				String jwt = json.get("token").getAsString();
+				DeviceResource deviceResource = new DeviceResource(mApplicationContext);
+
+				JsonObject authorization = deviceResource.authorize(jwt, strategy, uid);
+				if (authorization == null) {
+					return new AccountStatus(AccountStatus.Status.FAILED_AUTHORIZATION);
 				}
 
 				// check server api version to ensure compatibility before continuing
-				JsonObject serverVersion = authorizeResponse.get("api").getAsJsonObject().get("version").getAsJsonObject();
+				JsonObject serverVersion = authorization.get("api").getAsJsonObject().get("version").getAsJsonObject();
 				if (!PreferenceHelper.getInstance(mApplicationContext).validateServerVersion(serverVersion.get("major").getAsInt(), serverVersion.get("minor").getAsInt())) {
 					Log.e(LOG_NAME, "Server version not compatible");
 					return new AccountStatus(AccountStatus.Status.INVALID_SERVER);
@@ -145,9 +127,9 @@ public class FormAuthLoginTask extends AbstractAccountTask {
 				// put the token information in the shared preferences
 				Editor editor = sharedPreferences.edit();
 
-				editor.putString(mApplicationContext.getString(R.string.tokenKey), authorizeResponse.get("token").getAsString().trim());
+				editor.putString(mApplicationContext.getString(R.string.tokenKey), authorization.get("token").getAsString().trim());
 				try {
-					Date tokenExpiration = iso8601Format.parse(authorizeResponse.get("expirationDate").getAsString().trim());
+					Date tokenExpiration = iso8601Format.parse(authorization.get("expirationDate").getAsString().trim());
 					long tokenExpirationLength = tokenExpiration.getTime() - (new Date()).getTime();
 					editor.putString(mApplicationContext.getString(R.string.tokenExpirationDateKey), iso8601Format.format(tokenExpiration));
 					editor.putLong(mApplicationContext.getString(R.string.tokenExpirationLengthKey), tokenExpirationLength);
@@ -156,7 +138,7 @@ public class FormAuthLoginTask extends AbstractAccountTask {
 				}
 
 				// initialize the current user
-				JsonObject userJson = authorizeResponse.getAsJsonObject("user");
+				JsonObject userJson = authorization.getAsJsonObject("user");
 
 				// if username is different, then clear the db
 				String oldUsername = sharedPreferences.getString(mApplicationContext.getString(R.string.usernameKey), mApplicationContext.getString(R.string.usernameDefaultValue));
@@ -184,53 +166,23 @@ public class FormAuthLoginTask extends AbstractAccountTask {
 
 				editor.commit();
 
-				return new AccountStatus(AccountStatus.Status.SUCCESSFUL_LOGIN, new ArrayList<Integer>(), new ArrayList<String>(), authorizeResponse);
+				return new AccountStatus(AccountStatus.Status.SUCCESSFUL_LOGIN, new ArrayList<Integer>(), new ArrayList<String>(), authorization);
 			} else {
-				// Could be that the device is not registered.
-				if (!needToRegisterDevice) {
-					// Try to register it
-					AccountStatus.Status regStatus = registerDevice(uuid, strategy);
-
-					if (regStatus.equals(AccountStatus.Status.SUCCESSFUL_REGISTRATION)) {
-						return new AccountStatus(regStatus);
-					} else if (regStatus == AccountStatus.Status.FAILED_LOGIN) {
-						String errorMessage = "Please check your username and password and try again.";
-						if (response.errorBody() != null) {
-							errorMessage = response.errorBody().string();
-						}
-
-						List<Integer> errorIndices = new ArrayList<>();
-						errorIndices.add(2);
-						List<String> errorMessages = new ArrayList<>();
-						errorMessages.add(errorMessage);
-						return new AccountStatus(regStatus, errorIndices, errorMessages);
-					}
+				String errorMessage = "Please check your username and password and try again.";
+				if (signin.errorBody() != null) {
+					errorMessage = signin.errorBody().string();
 				}
+
+				List<Integer> errorIndices = new ArrayList<>();
+				errorIndices.add(2);
+				List<String> errorMessages = new ArrayList<>();
+				errorMessages.add(errorMessage);
+				return new AccountStatus(AccountStatus.Status.FAILED_LOGIN, errorIndices, errorMessages);
 			}
 		} catch (Exception e) {
 			Log.e(LOG_NAME, "Problem logging in.", e);
 		}
 
-
 		return new AccountStatus(AccountStatus.Status.FAILED_LOGIN);
-	}
-
-	private AccountStatus.Status registerDevice(String uid, String strategy) {
-		try {
-			DeviceResource deviceResource = new DeviceResource(mApplicationContext);
-			JsonObject deviceJson = deviceResource.createDevice(strategy, uid);
-			if (deviceJson != null) {
-				if (deviceJson.get("registered").getAsBoolean()) {
-					return AccountStatus.Status.ALREADY_REGISTERED;
-				} else {
-					// device registration has been submitted
-					return AccountStatus.Status.SUCCESSFUL_REGISTRATION;
-				}
-			}
-		} catch (Exception e) {
-			Log.e(LOG_NAME, "Problem registering device.", e);
-		}
-
-		return AccountStatus.Status.FAILED_LOGIN;
 	}
 }

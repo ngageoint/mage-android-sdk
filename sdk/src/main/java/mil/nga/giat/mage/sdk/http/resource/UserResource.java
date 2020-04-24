@@ -55,9 +55,6 @@ public class UserResource {
         @POST("/auth/{strategy}/signin")
         Call<JsonObject> signin(@Path("strategy") String strategy, @Body JsonObject body);
 
-        @POST("/auth/{strategy}/authorize")
-        Call<JsonObject> authorize(@Path("strategy") String strategy, @Body JsonObject body);
-
         @POST("/api/logout")
         Call<ResponseBody> logout(@Header("Authorization") String authorization);
 
@@ -95,7 +92,7 @@ public class UserResource {
         this.context = context;
     }
 
-    public Response<JsonObject> signin(String strategy, String username, String uid, String password) {
+    public Response<JsonObject> signin(String strategy, String username, String password) {
         Response<JsonObject> response = null;
 
         String baseUrl = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.serverURLKey), context.getString(R.string.serverURLDefaultValue));
@@ -111,7 +108,6 @@ public class UserResource {
 
             JsonObject json = new JsonObject();
             json.addProperty("username", username);
-            json.addProperty("uid", uid);
             json.addProperty("password", password);
 
             try {
@@ -127,46 +123,6 @@ public class UserResource {
         }
 
         return response;
-    }
-
-    public JsonObject authorize(String strategy, String uid) {
-        JsonObject body = null;
-
-        String baseUrl = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.serverURLKey), context.getString(R.string.serverURLDefaultValue));
-
-        try {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(HttpClientManager.getInstance().httpClient())
-                    .build();
-
-            UserService service = retrofit.create(UserService.class);
-
-            JsonObject json = new JsonObject();
-            json.addProperty("uid", uid);
-
-            try {
-                PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-                json.addProperty("appVersion", String.format("%s-%s", packageInfo.versionName, packageInfo.versionCode));
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.e(LOG_NAME , "Problem retrieving package info.", e);
-            }
-
-            Response<JsonObject> response = service.authorize(strategy, json).execute();
-            if (response.isSuccessful()) {
-                body = response.body();
-            } else {
-                Log.e(LOG_NAME, "Bad request.");
-                if (response.errorBody() != null) {
-                    Log.e(LOG_NAME, response.errorBody().string());
-                }
-            }
-        } catch (Exception e) {
-            Log.e(LOG_NAME, "Bad request.", e);
-        }
-
-        return body;
     }
 
     public void logout(Callback<ResponseBody> callback) {

@@ -86,14 +86,8 @@
 
     <string name="authenticationStrategiesKey">authenticationStrategies</string>
 
-    <string name="passwordMinLengthKey">gAuthenticationStrategiesLocalPasswordMinLength</string>
-    <integer name="passwordMinLengthDefaultValue">5</integer>
-
-    <string name="compatibleVersionMajorKey">compatibleVersionMajor</string>
-    <integer name="compatibleVersionMajorDefaultValue">5</integer>
-
-    <string name="compatibleVersionMinorKey">compatibleVersionMinor</string>
-    <integer name="compatibleVersionMinorDefaultValue">2</integer>
+    <integer name="compatibleVersionMajor">5</integer>
+    <integer name="compatibleVersionMinor">4</integer>
 
     <!-- from the server /api call -->
     <string name="serverVersionMajorKey">gVersionMajor</string>
@@ -101,5 +95,6 @@
     <string name="serverDisclaimerShow">gDisclaimerShow</string>
     <string name="serverDisclaimerTitle">gDisclaimerTitle</string>
     <string name="serverDisclaimerText">gDisclaimerText</string>
+    <string name="localPasswordMinLength">gAuthenticationStrategiesLocalPasswordMinLength</string>
 
 </resources>
