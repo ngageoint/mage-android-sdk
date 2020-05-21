@@ -65,65 +65,62 @@ public class IdpLoginTask extends AbstractAccountTask {
 				return new AccountStatus(AccountStatus.Status.SUCCESSFUL_SIGNUP);
 			}
 
-			if (authenticationJson.has("oauth")) {
-				UserResource userResource = new UserResource(mApplicationContext);
-				JsonObject authorizeResponse = userResource.authorize(strategy, uid);
-				if (authorizeResponse == null) {
-					DeviceResource deviceResource = new DeviceResource(mApplicationContext);
-					JsonObject deviceJson = deviceResource.createDevice(strategy, uid);
-					if (deviceJson.get("registered").getAsBoolean()) {
-						return new AccountStatus(AccountStatus.Status.ALREADY_REGISTERED);
-					} else {
-						return new AccountStatus(AccountStatus.Status.SUCCESSFUL_REGISTRATION);
-					}
-				}
-
-				// Successful login, put the token information in the shared preferences
-				String token = authorizeResponse.get("token").getAsString();
-				editor.putString(mApplicationContext.getString(mil.nga.giat.mage.sdk.R.string.tokenKey), token.trim());
-				try {
-					Date tokenExpiration = iso8601Format.parse(authorizeResponse.get("expirationDate").getAsString().trim());
-					long tokenExpirationLength = tokenExpiration.getTime() - (new Date()).getTime();
-					editor.putString(mApplicationContext.getString(mil.nga.giat.mage.sdk.R.string.tokenExpirationDateKey), iso8601Format.format(tokenExpiration));
-					editor.putLong(mApplicationContext.getString(mil.nga.giat.mage.sdk.R.string.tokenExpirationLengthKey), tokenExpirationLength);
-				} catch (java.text.ParseException e) {
-					Log.e(LOG_NAME, "Problem parsing token expiration date.", e);
-				}
-
-				userJson = authorizeResponse.getAsJsonObject("user");
-
-				// if user id is different, then clear the db
-				String oldUserId = sharedPreferences.getString(mApplicationContext.getString(R.string.usernameKey), null);
-				String newUserId = userJson.get("id").getAsString();
-				if (oldUserId == null || !oldUserId.equals(newUserId)) {
-					DaoStore.getInstance(mApplicationContext).resetDatabase();
-				}
-
-				User user = userDeserializer.parseUser(userJson.toString());
-				if (user != null) {
-					user.setFetchedDate(new Date());
-					UserHelper userHelper = UserHelper.getInstance(mApplicationContext);
-					user = userHelper.createOrUpdate(user);
-
-					userHelper.setCurrentUser(user);
+			UserResource userResource = new UserResource(mApplicationContext);
+			JsonObject authorizeResponse = userResource.authorize(strategy, uid);
+			if (authorizeResponse == null) {
+				DeviceResource deviceResource = new DeviceResource(mApplicationContext);
+				JsonObject deviceJson = deviceResource.createDevice(strategy, uid);
+				if (deviceJson.get("registered").getAsBoolean()) {
+					return new AccountStatus(AccountStatus.Status.ALREADY_REGISTERED);
 				} else {
-					Log.e(LOG_NAME, "Unable to Deserializer user.");
-					List<Integer> errorIndices = new ArrayList<Integer>();
-					errorIndices.add(2);
-					List<String> errorMessages = new ArrayList<String>();
-					errorMessages.add("Problem retrieving your user.");
-					return new AccountStatus(AccountStatus.Status.FAILED_LOGIN, errorIndices, errorMessages);
+					return new AccountStatus(AccountStatus.Status.SUCCESSFUL_REGISTRATION);
 				}
-
-				editor.putString(mApplicationContext.getString(R.string.usernameKey), newUserId);
-				editor.putString(mApplicationContext.getString(R.string.displayNameKey), user.getDisplayName());
-
-				editor.commit();
-
-				return new AccountStatus(AccountStatus.Status.SUCCESSFUL_LOGIN, new ArrayList<Integer>(), new ArrayList<String>(), authorizeResponse);
-			} else {
-				return new AccountStatus(AccountStatus.Status.FAILED_LOGIN);
 			}
+
+			// Successful login, put the token information in the shared preferences
+			String token = authorizeResponse.get("token").getAsString();
+			editor.putString(mApplicationContext.getString(mil.nga.giat.mage.sdk.R.string.tokenKey), token.trim());
+			try {
+				Date tokenExpiration = iso8601Format.parse(authorizeResponse.get("expirationDate").getAsString().trim());
+				long tokenExpirationLength = tokenExpiration.getTime() - (new Date()).getTime();
+				editor.putString(mApplicationContext.getString(mil.nga.giat.mage.sdk.R.string.tokenExpirationDateKey), iso8601Format.format(tokenExpiration));
+				editor.putLong(mApplicationContext.getString(mil.nga.giat.mage.sdk.R.string.tokenExpirationLengthKey), tokenExpirationLength);
+			} catch (java.text.ParseException e) {
+				Log.e(LOG_NAME, "Problem parsing token expiration date.", e);
+			}
+
+			userJson = authorizeResponse.getAsJsonObject("user");
+
+			// if user id is different, then clear the db
+			String oldUserId = sharedPreferences.getString(mApplicationContext.getString(R.string.usernameKey), null);
+			String newUserId = userJson.get("id").getAsString();
+			if (oldUserId == null || !oldUserId.equals(newUserId)) {
+				DaoStore.getInstance(mApplicationContext).resetDatabase();
+			}
+
+			User user = userDeserializer.parseUser(userJson.toString());
+			if (user != null) {
+				user.setFetchedDate(new Date());
+				UserHelper userHelper = UserHelper.getInstance(mApplicationContext);
+				user = userHelper.createOrUpdate(user);
+
+				userHelper.setCurrentUser(user);
+			} else {
+				Log.e(LOG_NAME, "Unable to Deserializer user.");
+				List<Integer> errorIndices = new ArrayList<Integer>();
+				errorIndices.add(2);
+				List<String> errorMessages = new ArrayList<String>();
+				errorMessages.add("Problem retrieving your user.");
+				return new AccountStatus(AccountStatus.Status.FAILED_LOGIN, errorIndices, errorMessages);
+			}
+
+			editor.putString(mApplicationContext.getString(R.string.usernameKey), newUserId);
+			editor.putString(mApplicationContext.getString(R.string.displayNameKey), user.getDisplayName());
+
+			editor.commit();
+
+			return new AccountStatus(AccountStatus.Status.SUCCESSFUL_LOGIN, new ArrayList<Integer>(), new ArrayList<String>(), authorizeResponse);
+
 		} catch (Exception e) {
 			Log.e(LOG_NAME, "Problem with oauth login attempt", e);
 			return new AccountStatus(AccountStatus.Status.FAILED_LOGIN);

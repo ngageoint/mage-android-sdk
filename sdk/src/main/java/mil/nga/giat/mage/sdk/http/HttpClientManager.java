@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -89,9 +90,7 @@ public class HttpClientManager implements IEventDispatcher<ISessionEventListener
                     builder.addHeader("Authorization", "Bearer " + token);
                 }
 
-                // add Accept-Encoding:gzip
-                builder.addHeader("Accept-Encoding", "gzip")
-                    .addHeader("User-Agent", userAgent);
+                builder.addHeader("User-Agent", userAgent);
 
                 Response response = chain.proceed(builder.build());
 
@@ -152,7 +151,7 @@ public class HttpClientManager implements IEventDispatcher<ISessionEventListener
 
         @Override
         public List<Cookie> loadForRequest(HttpUrl url) {
-            List<Cookie> cookies = cookieJar.loadForRequest(url);
+            List<Cookie> cookies = new ArrayList<>(cookieJar.loadForRequest(url));
 
             String urlString = url.toString();
             String cookie = webViewCookieManager.getCookie(urlString);

@@ -50,6 +50,30 @@ public class Layer implements Comparable<Layer> {
 	@ForeignCollectionField(eager = false)
 	private Collection<StaticFeature> staticFeatures = new ArrayList<>();
 
+	@DatabaseField
+	private String url;
+
+	@DatabaseField
+	private String format;
+
+	@DatabaseField
+	private String wmsFormat;
+
+	@DatabaseField
+	private String wmsVersion;
+
+	@DatabaseField
+	private String wmsLayers;
+
+	@DatabaseField
+	private String wmsStyles;
+
+	@DatabaseField
+	private String wmsTransparent;
+
+	@DatabaseField
+	private boolean base = false;
+
 	public Layer() {
 		// ORMLite needs a no-arg constructor
 	}
@@ -140,6 +164,62 @@ public class Layer implements Comparable<Layer> {
 
 	public Collection<StaticFeature> getStaticFeatures() {
 		return staticFeatures;
+	}
+
+	public void setUrl(String url){this.url = url;}
+
+	public String getUrl(){return this.url;}
+
+	public void setFormat(String format){this.format = format;}
+
+	public String getFormat(){return this.format;}
+
+	public String getWmsFormat() {
+		return wmsFormat;
+	}
+
+	public void setWmsFormat(String wmsFormat) {
+		this.wmsFormat = wmsFormat;
+	}
+
+	public String getWmsVersion() {
+		return wmsVersion;
+	}
+
+	public void setWmsVersion(String wmsVersion) {
+		this.wmsVersion = wmsVersion;
+	}
+
+	public String getWmsLayers() {
+		return wmsLayers;
+	}
+
+	public void setWmsLayers(String wmsLayers) {
+		this.wmsLayers = wmsLayers;
+	}
+
+	public String getWmsStyles() {
+		return wmsStyles;
+	}
+
+	public void setWmsStyles(String wmsStyles) {
+		this.wmsStyles = wmsStyles;
+	}
+
+	public String getWmsTransparent() {
+		return wmsTransparent;
+	}
+
+	public void setWmsTransparent(String wmsTransparent) {
+		this.wmsTransparent = wmsTransparent;
+	}
+
+	public boolean getBase() {
+		return base;
+	}
+
+	public void setBase(boolean base) {
+		this.base = base;
 	}
 
 	@Override
