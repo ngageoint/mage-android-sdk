@@ -21,7 +21,6 @@ import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
-import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -135,23 +134,23 @@ public class HttpClientManager implements IEventDispatcher<ISessionEventListener
 
     private class SessionCookieJar implements CookieJar {
 
-        private JavaNetCookieJar cookieJar;
         private android.webkit.CookieManager webViewCookieManager = android.webkit.CookieManager.getInstance();
 
         SessionCookieJar() {
             CookieManager cookieManager = new CookieManager();
             cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ORIGINAL_SERVER);
-            cookieJar = new JavaNetCookieJar(cookieManager);
         }
 
         @Override
         public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-            cookieJar.saveFromResponse(url, cookies);
+            for (Cookie cookie: cookies) {
+                webViewCookieManager.setCookie(url.toString(), cookie.toString());
+            }
         }
 
         @Override
         public List<Cookie> loadForRequest(HttpUrl url) {
-            List<Cookie> cookies = new ArrayList<>(cookieJar.loadForRequest(url));
+            List<Cookie> cookies = new ArrayList<>();
 
             String urlString = url.toString();
             String cookie = webViewCookieManager.getCookie(urlString);
