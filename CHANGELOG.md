@@ -3,11 +3,20 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.2.7 (TBD)
+## 6.2.8 (TBD)
+
+##### Features
+* Support new server JWT authentication token
+* Upgrade Android and Gradle versions.
+
+##### Bug Fixes
+
+## [6.2.7](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.7)
 
 ##### Features
 
 ##### Bug Fixes
+* Fix isEmpty bug for non string properties
 
 ## [6.2.6](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.6)
 

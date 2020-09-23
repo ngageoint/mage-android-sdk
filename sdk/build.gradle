@@ -16,12 +16,12 @@ ext {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 28
+        minSdkVersion 22
+        targetSdkVersion 30
         resValue 'string', 'source_refspec', project.sourceRefspec
         manifestPlaceholders source_refspec: project.sourceRefspec
         buildConfigField 'String', 'SOURCE_REFSPEC', $/"${project.sourceRefspec}"/$
