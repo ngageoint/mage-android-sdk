@@ -17,7 +17,6 @@ ext {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
 
     defaultConfig {
         minSdkVersion 22
@@ -110,7 +109,7 @@ repositories {
 
 dependencies {
     api 'androidx.appcompat:appcompat:1.1.0'
-    api 'androidx.preference:preference:1.1.0'
+    api 'androidx.preference:preference:1.1.1'
     api 'androidx.exifinterface:exifinterface:1.0.0'
     api 'com.j256.ormlite:ormlite-android:5.1'
     api 'mil.nga.geopackage:geopackage-android:3.4.0'
