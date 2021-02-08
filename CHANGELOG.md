@@ -3,7 +3,13 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.2.8 (TBD)
+## 6.2.9 (TBD)
+
+##### Features
+
+##### Bug Fixes
+
+## [6.2.8](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.8)
 
 ##### Features
 * Support new server JWT authentication token
