@@ -16,6 +16,7 @@ Adheres to [Semantic Versioning](http://semver.org/).
 ##### Bug Fixes
 * Update token check to work for offline to online transition
 * Preserve database version on user change
+* Send user-agent header on device authorization
 
 ## [6.2.8](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.2.8)
 
