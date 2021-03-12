@@ -3,9 +3,17 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.2.10 (TBD)
+## 6.4.0 (TBD)
 
 ##### Features
+* Local user signup captcha
+
+##### Bug Fixes
+
+## 6.3.0 (TBD)
+
+##### Features
+* Better differentiate between feed/map primary and secondary fields
 
 ##### Bug Fixes
 
