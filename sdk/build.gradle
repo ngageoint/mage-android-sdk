@@ -6,6 +6,8 @@ plugins {
 }
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 group 'mil.nga.giat.mage'
 archivesBaseName = 'mage-android-sdk'
