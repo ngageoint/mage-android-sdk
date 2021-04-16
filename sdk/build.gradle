@@ -1,7 +1,6 @@
 import org.ajoberstar.grgit.Grgit;
 
 plugins {
-    id 'net.linguica.maven-settings' version '0.5'
     id 'org.ajoberstar.grgit' version '1.6.0'
 }
 apply plugin: 'com.android.library'
@@ -29,6 +28,7 @@ android {
     }
 
     buildTypes {
+        debug {}
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
@@ -40,72 +40,15 @@ task sourceJar(type: Jar) {
     from project.android.sourceSets.main.java.srcDirs
 }
 
-def configurePom(pom) {
-    // the publication doesn't know about our dependencies, so we have to manually add them to the pom
-    // epic fail android
-    pom.withXml {
-        // for dependencies and exclusions
-        def dependenciesNode = asNode().appendNode('dependencies')
-        configurations.api.allDependencies.each { Dependency dep ->
-            if (dep instanceof SelfResolvingDependency) {
-                // apparently the files() dependency results in a SelfResolvingDependency - skip it
-                return;
-            }
-
-            def dependencyNode = dependenciesNode.appendNode('dependency')
-            dependencyNode.appendNode('groupId', dep.group)
-            dependencyNode.appendNode('artifactId', dep.name)
-            dependencyNode.appendNode('version', dep.version)
-
-            // for exclusions
-            if (dep.excludeRules.size() > 0) {
-                def exclusions = dependencyNode.appendNode('exclusions')
-                dep.excludeRules.each { ExcludeRule ex ->
-                    def exclusion = exclusions.appendNode('exclusion')
-                    exclusion.appendNode('groupId', ex.group)
-                    exclusion.appendNode('artifactId', ex.module)
-                }
+afterEvaluate {
+    publishing {
+        publications {
+            aar(MavenPublication) {
+                from components.release
+                artifactId archivesBaseName
+                artifact source: sourceJar, classifier: 'sources'
             }
         }
-    }
-}
-
-publishing {
-    publications {
-        aar(MavenPublication) {
-            artifactId archivesBaseName
-            pom.packaging 'aar'
-            configurePom(pom)
-            project.afterEvaluate {
-                artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-release.aar", {
-                    builtBy assembleRelease
-                }
-                artifact "${project.buildDir}/outputs/aar/${archivesBaseName}-debug.aar", {
-                    classifier 'debug'
-                    builtBy assembleDebug
-                }
-                artifact sourceJar, {
-                    classifier 'sources'
-                    builtBy sourceJar
-                }
-            }
-        }
-    }
-}
-
-repositories {
-    def buildRepo = maven {
-        name 'build'
-        url project.properties['repositories.build.url'] ?: "${buildDir}/m2"
-    }
-    publishing.repositories.add buildRepo
-
-    if (project.hasProperty('repositories.shared.name')) {
-        def sharedRepo = maven {
-            name project.properties['repositories.shared.name']
-            url "${project.properties['repositories.shared.url']}"
-        }
-        publishing.repositories.add sharedRepo
     }
 }
 
