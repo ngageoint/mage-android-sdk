@@ -3,14 +3,21 @@ All notable changes to this project will be documented in this file.
 Adheres to [Semantic Versioning](http://semver.org/).
 
 ---
-## 6.4.0 (TBD)
+## 6.4.1 (TBD)
 
 ##### Features
-* Local user signup captcha
 
 ##### Bug Fixes
 
-## 6.3.0 (TBD)
+## [6.4.0](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.4.0)
+
+##### Features
+* Local user signup captcha
+* Server compatibility upgraded to list
+
+##### Bug Fixes
+
+## [6.3.0](https://github.com/ngageoint/mage-android-sdk/releases/tag/6.3.0)
 
 ##### Features
 * Better differentiate between feed/map primary and secondary fields
