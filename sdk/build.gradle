@@ -10,7 +10,7 @@ apply plugin: 'kotlin-android-extensions'
 
 group 'mil.nga.giat.mage'
 archivesBaseName = 'mage-android-sdk'
-version '6.4.0'
+version '6.4.1'
 ext {
     versionCode = 26
     sourceRefspec = Grgit.open().head().id
